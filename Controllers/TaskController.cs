@@ -30,17 +30,17 @@ namespace controler
         }
 
         [HttpPatch("{id}")]
-        public ActionResult<Note> EditPatchBody(int id, [FromBody] PatchBody body)
+        public ActionResult<Note> EditPatchBody(int id, [FromBody] bool done)
         {
-            if (!tasks.Exists(task => task.Id == id))
+            var task = tasks.FirstOrDefault(task => task.Id == id);
+            if (task == null)
             {
                 return NotFound();
             }
-           
-            tasks.Where(task => task.Id == id).FirstOrDefault(t => t.Done = body.Done);
-            Note note = tasks.Where(task => task.Id == id).First();
+
+            task.Done = done;
             
-            return Ok(note);
+            return Ok(task);
         }
         
     }
