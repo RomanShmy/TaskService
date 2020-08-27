@@ -46,6 +46,34 @@ namespace Task
             return tasks;
         }
 
+        public Note GetTaskById(int id)
+        {
+            if(!IsPresent(id))
+            {
+                return new Note();
+            }
+            Note task = new Note();
+            string query = "select * from fef.tasks where id=@id";
+            using(NpgsqlConnection connection = GetConnection())
+            {
+                connection.Open();
+                NpgsqlCommand cmd = new NpgsqlCommand(query, connection);
+                cmd.Parameters.AddWithValue("id", id);
+                using (var reader = cmd.ExecuteReader())
+                {
+                    while (reader.Read())
+                    {
+                        task.Id = reader.GetInt32(0);
+                        task.Name = reader.GetString(1);
+                        task.Done = reader.GetBoolean(2);
+                    }
+                }
+                
+            }
+
+            return task;
+        }
+
         public Note SaveTask(Note note)
         {
             string query = "insert into fef.tasks (name, done) values (@name, @done) returning id";
@@ -65,56 +93,64 @@ namespace Task
 
             }
             
-            
             return note;
         }
 
-        public bool UpdateTaskDone(int id, bool done)
+        public bool UpdateTaskDone(int id, Note note)
         {
-            if (IsPresent(id))
+            if (!IsPresent(id))
             {
-                string query = $"update fef.tasks set done={done} where id = {id}";
-                using (NpgsqlConnection connection = GetConnection())
-                {
-                    connection.Open();
-                    NpgsqlCommand cmd = new NpgsqlCommand(query, connection);
-
-                    cmd.ExecuteNonQuery();
-                }
-
-                return true;
+                return false;
+            }
+            string query = "update fef.tasks set done=@done where id=@id";
+            using (NpgsqlConnection connection = GetConnection())
+            {
+                connection.Open();
+                NpgsqlCommand cmd = new NpgsqlCommand(query, connection);
+                cmd.Parameters.AddWithValue("done", note.Done);
+                cmd.Parameters.AddWithValue("id", id);
+                cmd.ExecuteNonQuery();
             }
 
-            return false;
+            return true;
         }
 
-        private bool IsPresent(int id)
+        public bool Delete(int id)
         {
-            Note note = new Note();
-            string query = "select * from fef.tasks where id = @id";
+            if (!IsPresent(id))
+            {
+                return false;
+            }
+
+            string query = "delete from fef.tasks where id = @id";
             using(NpgsqlConnection connection = GetConnection())
             {
                 connection.Open();
                 NpgsqlCommand cmd = new NpgsqlCommand(query, connection);
                 cmd.Parameters.AddWithValue("id", id);
+                cmd.ExecuteNonQuery();
+            }
+
+            return true;
+        }
+
+        private bool IsPresent(int id)
+        {
+            bool result = true;
+            string query = "select exists(select 1 from fef.tasks where id = @id)";
+            using(NpgsqlConnection connection = GetConnection())
+            {
+                connection.Open();
+                NpgsqlCommand cmd = new NpgsqlCommand(query, connection);
                 using (var reader = cmd.ExecuteReader())
                 {
                     while (reader.Read())
                     {
-                        note.Id = reader.GetInt32(0);
-                        note.Name = reader.GetString(1);
-                        note.Done = reader.GetBoolean(2);
+                        result = reader.GetBoolean(0);
                     }
                 }
-                
             }
-
-            if (note.Name == null)
-            {
-                return false;
-            }
-
-            return true;
+            return result;
         }
     }
 }
