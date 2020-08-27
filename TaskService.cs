@@ -48,16 +48,24 @@ namespace Task
 
         public Note SaveTask(Note note)
         {
-            string query = "insert into fef.tasks (name, done) values (@name, @done)";
+            string query = "insert into fef.tasks (name, done) values (@name, @done) returning id";
             using(NpgsqlConnection connection = GetConnection())
             {
                 connection.Open();
                 NpgsqlCommand cmd = new NpgsqlCommand(query, connection);
                 cmd.Parameters.AddWithValue("name", note.Name);
                 cmd.Parameters.AddWithValue("done", note.Done);
-                cmd.ExecuteNonQuery();
+                using (var reader = cmd.ExecuteReader())
+                {
+                    while (reader.Read())
+                    {
+                        note.Id = reader.GetInt32(0);
+                    }
+                }
 
             }
+            
+            
             return note;
         }
 
