@@ -10,37 +10,38 @@ using Microsoft.Extensions.Logging;
 
 namespace controler
 {
-    [Route("[controller]")]
+    [Route("api/[controller]")]
     [ApiController]
     public class TaskController : Controller
     {
-        private static List<Note> tasks = new List<Note>(){new Note(){Id = 1, Name = "buy car", Done = false}};
-    
         [HttpGet]
         public ActionResult<List<Note>> GetNotes()
         {
-            return Ok(tasks);
+            var context = HttpContext.RequestServices.GetService(typeof(TaskService)) as TaskService;
+            return Ok(context?.GetAllTasks());
         }
 
         [HttpPost]
         public ActionResult<Note> AddNote([FromBody] Note note)
         {
-            tasks.Add(note);
+            var context = HttpContext.RequestServices.GetService(typeof(TaskService)) as TaskService;
+            context?.SaveTask(note);
             return Ok(note);
         }
-
+        
         [HttpPatch("{id}")]
-        public ActionResult<Note> EditPatchBody(int id, [FromBody] bool done)
+        public ActionResult EditPatchBody(int id, [FromBody] bool done)
         {
-            var task = tasks.FirstOrDefault(task => task.Id == id);
-            if (task == null)
+            
+            var context = HttpContext.RequestServices.GetService(typeof(TaskService)) as TaskService;
+
+            var result = context.UpdateTaskDone(id, done);
+            if (result)
             {
-                return NotFound();
+                return Ok();
             }
 
-            task.Done = done;
-            
-            return Ok(task);
+            return NotFound();
         }
         
     }

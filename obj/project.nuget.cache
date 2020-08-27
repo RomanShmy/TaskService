@@ -1,8 +1,11 @@
 {
   "version": 2,
-  "dgSpecHash": "m3pXw1nYY3/G0Rr93ZMti6baIUS3QMtnVJvPN8ZSPuQ+YW5h02xZ/LmvLg6VPxWJr3PA7EqITftwxFGZaAX4Tw==",
+  "dgSpecHash": "vZBSVzOTVsvIVuwl9b/8/YohkTWjZdfBfD3f6m2RUIuIBY9FMJV7E7vyCNBJ93zLU8wWs8zGRzTzeuyFkowBRg==",
   "success": true,
   "projectFilePath": "/Users/roman/Desktop/interlink/Task/Task.csproj",
-  "expectedPackageFiles": [],
+  "expectedPackageFiles": [
+    "/Users/roman/.nuget/packages/npgsql/5.0.0-alpha1/npgsql.5.0.0-alpha1.nupkg.sha512",
+    "/Users/roman/.nuget/packages/system.runtime.compilerservices.unsafe/4.6.0/system.runtime.compilerservices.unsafe.4.6.0.nupkg.sha512"
+  ],
   "logs": []
 }

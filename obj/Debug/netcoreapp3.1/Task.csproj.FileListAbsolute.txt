@@ -17,3 +17,5 @@
 /Users/roman/Desktop/interlink/Task/obj/Debug/netcoreapp3.1/Task.dll
 /Users/roman/Desktop/interlink/Task/obj/Debug/netcoreapp3.1/Task.pdb
 /Users/roman/Desktop/interlink/Task/obj/Debug/netcoreapp3.1/Task.genruntimeconfig.cache
+/Users/roman/Desktop/interlink/Task/bin/Debug/netcoreapp3.1/Npgsql.dll
+/Users/roman/Desktop/interlink/Task/obj/Debug/netcoreapp3.1/Task.csproj.CopyComplete

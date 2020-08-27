@@ -14,7 +14,7 @@
         "outputPath": "/Users/roman/Desktop/interlink/Task/obj/",
         "projectStyle": "PackageReference",
         "configFilePaths": [
-          "/Users/roman/.nuget/NuGet/NuGet.Config"
+          "/Users/roman/.config/NuGet/NuGet.Config"
         ],
         "originalTargetFrameworks": [
           "netcoreapp3.1"
@@ -35,6 +35,12 @@
       },
       "frameworks": {
         "netcoreapp3.1": {
+          "dependencies": {
+            "Npgsql": {
+              "target": "Package",
+              "version": "[5.0.0-alpha1, )"
+            }
+          },
           "imports": [
             "net461",
             "net462",
